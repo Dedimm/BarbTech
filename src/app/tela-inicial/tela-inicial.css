@@ -1,0 +1,125 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFBF00;
+    background-color: rgba(0, 0, 0, 0.397);
+}
+
+section {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url(../image/TelaInicialBarbearia.png);
+    background-repeat: repeat-x;
+    height: 100vh;
+}
+
+.slogan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-family: "Manrope", sans-serif;
+    font-size: 30px;
+}
+
+strong {
+    color: #FFBF00;
+}
+
+p {
+    color: #D4C5AB;
+}
+
+.text-slogan,
+.text-form{
+    font-size: 20px;
+    text-align: center;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 48px;
+}
+
+.form-usuario,
+.form-profissional {
+    width: 416px;
+    height: 400px;
+    background-color: hsla(0, 2%, 11%, 0.60);
+}
+
+
+.usuario,
+.profissional {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 40px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: hsla(0, 0%, 16%, 0.733);
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon-usuario {
+    background-image: url(../image/IconUsuario.png);
+}
+
+.icon-profissional {
+    background-image: url(../image/IconProfissional.png);
+}
+
+h3 {
+    font-size: 24px;
+    color: #E5E2E1;
+    font-family: "Manrope", sans-serif;
+}
+
+.button-usuario,
+.button-profissional {
+    width: 334px;
+    height: 60px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.button-usuario {
+    background: #FFE2AB;
+    background: linear-gradient(159deg, rgba(255, 226, 171, 1) 0%, rgba(255, 191, 0, 1) 100%);
+    color: #402D00;
+}
+
+.button-profissional {
+    background: rgba(255, 255, 255, 0.2);
+    color: #B8B8B8;
+}
+
+footer {
+    margin-top: 2%;
+    background-color: #131313;
+    width: 100%;
+    height: 20%;
+    
+}
+
+.footer-direitos{
+    padding: 20px;
+}
+
+.footer-direitos p {
+    color: #6B7280;
+}
