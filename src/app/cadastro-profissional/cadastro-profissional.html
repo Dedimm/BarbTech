@@ -1,0 +1,53 @@
+<div class="tela">
+  <div class="container">
+
+    <!-- ESQUERDA -->
+    <div class="esquerda">
+      <div class="conteudo-esquerda">
+        <h1>BarbTech</h1>
+        <p>Cadastre-se e leve sua barbearia para outro nível</p>
+      </div>
+    </div>
+
+    <!-- DIREITA -->
+    <div class="direita">
+      <div class="form-group">
+        <h1>SEJA BEM-VINDO, PROFISSIONAL</h1>
+
+        <label>Nome Completo:</label>
+        <input type="text" placeholder="Seu nome completo">
+
+        <label>Email:</label>
+        <input type="email" placeholder="Seu email">
+
+        <label>Senha:</label>
+        <input type="password" placeholder="Sua senha">
+
+        <label>Confirmar Senha:</label>
+        <input type="password" placeholder="Confirme sua senha">
+
+        <label>Telefone:</label>
+        <input type="text" placeholder="Seu telefone">
+
+        <label>CPF:</label>
+        <input type="text" placeholder="Seu CPF">
+
+        <label class="checkbox-linha">
+          <input type="checkbox" [(ngModel)]="possuiCnpj">
+          Possui CNPJ?
+        </label>
+
+        @if(possuiCnpj){
+          <input type="text" placeholder="Seu CNPJ">
+        }
+
+        <div class="separador"></div>
+
+
+       <button type="submit" class="btn-primary">CADASTRAR</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>

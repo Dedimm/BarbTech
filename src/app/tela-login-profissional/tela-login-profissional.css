@@ -25,7 +25,6 @@
     border-radius: 16px;
     overflow: hidden;
 
-    /* 🔥 SHADOWBOX */
     box-shadow: 
         0 10px 30px rgba(0,0,0,0.4),
         0 0 0 1px rgba(255, 226, 171, 0.05);
