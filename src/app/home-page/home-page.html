@@ -1,0 +1,42 @@
+<app-header></app-header>
+<section class="homepageMain">
+    <div class="pesquisa">
+        <input type="text" placeholder="Procurar Serviço">
+    </div>
+    <div class="destaque-container">
+        <h2 class="destaque">Destaque</h2>
+        <div class="carousel">
+            <div class="carousel-track">
+                <div class="carousel-item" *ngFor="let item of items; let i = index" [ngClass]="getClass(i)">
+                    <img [src]="item.url" />
+                </div>
+            </div>
+            <button class="carousel-button" (click)="prev()">‹</button>
+            <button class="carousel-button" (click)="next()">›</button>
+        </div>
+    </div>
+    <div class="especialistas-container">
+        <div>
+            <h2>Mestre do oficio</h2>
+            <p>Especialistas mais bem avalidaos proximo a você</p>
+            <div class="especialistas">
+                <div class="especialistas-carroussel">
+                    <div *ngFor="let especialista of especialistas; let i = index"  (mouseenter)="selecionar(i)">
+                        <img class="especialistas-image" [src]="especialista.url" />
+                        <p>{{especialista.nome}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="especialistas-info">
+            <div class="especialistas-foto">
+                <img [src]="especialistas[selectedIndex].url" />
+            </div>
+            <div class="especialistas-dados">
+                <h2>{{ especialistas[selectedIndex].nomeCompleto }}</h2>
+                <p>{{ especialistas[selectedIndex].descricao }}</p>
+                <button>Agendar Agora</button>
+            </div>
+        </div>
+    </div>
+</section>

@@ -9,6 +9,9 @@ import { TelaInicial } from './tela-inicial/tela-inicial';
 import { TelaLoginUsuario } from './tela-login-usuario/tela-login-usuario';
 import { CadastroProfissional } from './cadastro-profissional/cadastro-profissional';
 import { CadastroCliente } from './cadastro-cliente/cadastro-cliente';
+import { Header } from './header/header';
+import { HomePage } from './home-page/home-page';
+import { Rodape } from './rodape/rodape';
 
 @NgModule({
   declarations: [
@@ -18,6 +21,9 @@ import { CadastroCliente } from './cadastro-cliente/cadastro-cliente';
     TelaLoginUsuario,
     CadastroProfissional,
     CadastroCliente,
+    Header,
+    HomePage,
+    Rodape,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners()],

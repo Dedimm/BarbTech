@@ -1,0 +1,197 @@
+.pesquisa{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input{
+    width: 50%;
+    padding: 20px;
+    border-radius: 46px;
+    background-color: rgba(97, 97, 97, 0.30);
+    border: none;
+}
+
+input::placeholder{
+    color: #737373;
+}
+
+.destaque-container{
+    padding: 5em;
+}
+
+.destaque{
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    color: #FFBF00;
+}
+
+.carousel {
+  position: relative;
+  width: 1000px;
+  height: 350px;
+  margin: auto;
+}
+
+.carousel img {
+  width: 800px;
+  height: 300px;
+  object-fit: cover; /* 🔥 importante */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.carousel-track {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+/* TODOS os itens */
+.carousel-item {
+  position: absolute;
+  transition: all 0.5s ease;
+}
+
+/* CENTRO */
+.carousel-item.active {
+  transform: scale(1.1);
+  z-index: 10;
+  opacity: 1;
+}
+
+/* ESQUERDA */
+.carousel-item.left {
+  transform: translateX(-250px) scale(0.9);
+  z-index: 5;
+  opacity: 0.2;
+}
+
+/* DIREITA */
+.carousel-item.right {
+  transform: translateX(250px) scale(0.9);
+  z-index: 5;
+  opacity: 0.2;
+}
+
+/* ESCONDIDOS */
+.carousel-item.hidden {
+  opacity: 0;
+  z-index: 1;
+}
+
+.carousel img {
+  width: 300px;
+  border-radius: 10px;
+}
+
+/* BOTÕES */
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  color: #FFBF00;
+  border: none;
+  font-size: 80px;
+  background-color: transparent;
+}
+
+button:first-of-type {
+  left: 10px;
+}
+
+button:last-of-type {
+  right: 10px;
+}
+
+
+.especialistas-container{
+    background-color: #1C1B1B;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+}
+
+.especalistas{
+    display: flex;
+    flex-direction: row;
+}
+
+.especialistas-container, h2{
+   font-family: "Manrope", sans-serif;
+   color: #FFBF00;
+}
+
+p{
+  color: white;
+  font-family: "Manrope", sans-serif;
+  font-size: 30px;
+}
+
+.especialistas-carroussel{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+text-align: center;
+  gap: 5%;
+}
+
+.especialistas-image{
+  border: double rgba(242, 202, 80, 0.30);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+/* CONTAINER DA PARTE DE BAIXO */
+.especialistas-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  margin-top: 40px;
+}
+
+/* FOTO GRANDE */
+.especialistas-foto img {
+  width: 350px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* TEXTO */
+.especialistas-dados {
+  max-width: 400px;
+}
+
+.especialistas-dados h2 {
+  color: #FFBF00;
+  font-size: 32px;
+}
+
+.especialistas-dados p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* BOTÃO */
+.especialistas-dados button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  background: transparent;
+  border: 1px solid #FFBF00;
+  color: #FFBF00;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.especialistas-dados button:hover {
+  background: #FFBF00;
+  color: black;
+}
+
