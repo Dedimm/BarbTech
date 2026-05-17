@@ -1,0 +1,148 @@
+<div class="tela">
+  <header class="logo">
+    <h1>BARBTECH</h1>
+  </header>
+
+  <div class="container">
+    <div class="perfil">
+
+      <h1 class="titulo">CONFIGURAÇÕES DO PROFISSIONAL</h1>
+      <span class="subtitulo">
+        Gerencie suas informações e preferências de conta
+      </span>
+
+      <div class="banner" [style.background-image]="fotoBanner">
+        <label for="banner-input" class="btn-capa">Alterar Capa</label>
+        <input type="file" id="banner-input" (change)="onBannerSelected($event)" accept="image/*" hidden>
+      </div>
+
+      <div class="perfil-info">
+        <div class="avatar-container">
+          <div class="avatar" [style.background-image]="fotoPerfil"></div>
+          <label for="foto-input" class="btn-alterar-foto">
+            <img src="assets/icons/camera.png" class="icon-camera" alt="">
+          </label>
+          <input type="file" id="foto-input" (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <div class="dados">
+          <h2>Arthur Morgan</h2>
+          <p>Master Barber & Stylist</p>
+        </div>
+      </div>
+
+      <div class="config">
+
+        <div class="card">
+          <h3 class="icon-user">SOBRE MIM</h3>
+          <textarea placeholder="Conte um pouco sobre sua trajetória e especialidades..."></textarea>
+        </div>
+
+        <div class="grid">
+
+          <div class="card">
+            <h3 class="icon-calendar">AGENDA DE TRABALHO</h3>
+
+            <div class="linha-agenda" *ngFor="let dia of agenda">
+              <div class="dia-info" (click)="toggleFechado(dia)">
+                <span class="dia-nome">{{ dia.nome }}</span>
+                <small class="dia-hint">(clique para abrir/fechar)</small>
+              </div>
+
+              <div class="dia-controles">
+                <ng-container *ngIf="!dia.fechado; else fechado">
+                  <div class="inputs-horario">
+                    <input type="time" [(ngModel)]="dia.inicio" (ngModelChange)="salvarAgenda()">
+                    <span>às</span>
+                    <input type="time" [(ngModel)]="dia.fim" (ngModelChange)="salvarAgenda()">
+                  </div>
+                </ng-container>
+
+                <ng-template #fechado>
+                  <span class="status-fechado" (click)="toggleFechado(dia)">Fechado</span>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="coluna-auxiliar">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="icon-briefcase">ATENDIMENTO DOMICILIAR</h3>
+                <label class="switch">
+                  <input type="checkbox" [(ngModel)]="domiciliarAtivo">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="dias" [class.desativado]="!domiciliarAtivo">
+                <button *ngFor="let dia of dias"
+                        (click)="toggleDia(dia)"
+                        [class.ativo]="dia.ativo"
+                        [disabled]="!domiciliarAtivo">
+                  {{ dia.nome }}
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="icon-pin">ENDEREÇO BASE</h3>
+              <div class="form-endereco">
+                <input placeholder="Rua" [(ngModel)]="endereco.rua">
+                <input placeholder="Número" [(ngModel)]="endereco.numero">
+                <input placeholder="Bairro" [(ngModel)]="endereco.bairro">
+                <input placeholder="CEP" [(ngModel)]="endereco.cep">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container-servicos-borda">
+          <h3 class="titulo-secao">MEUS SERVIÇOS</h3>
+
+          <div class="servicos-grid">
+            <div class="card-servico" *ngFor="let servico of listaServicos">
+              <div class="servico-info">
+                <h4>{{ servico.nome }}</h4>
+                <p>{{ servico.tempo }} min</p>
+              </div>
+              <div class="servico-preco">
+                <span>R$ {{ servico.valor }}</span>
+              </div>
+              <button class="btn-deletar" (click)="deletarServico(servico)">✕</button>
+            </div>
+
+            <div class="card-servico add-btn" (click)="adicionarServico()">
+              <span>+ Novo Serviço</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Novo Serviço -->
+  <div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Novo Serviço</h3>
+
+      <label>Nome</label>
+      <input type="text" [(ngModel)]="novoServico.nome" placeholder="Ex: Corte Social">
+
+      <label>Preço (R$)</label>
+      <input type="text" [(ngModel)]="novoServico.valor" placeholder="Ex: 45,00">
+
+      <label>Duração (minutos)</label>
+      <input type="number" [(ngModel)]="novoServico.tempo" placeholder="Ex: 30">
+
+      <div class="modal-botoes">
+        <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
+        <button class="btn-salvar" (click)="confirmarServico()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+</div>

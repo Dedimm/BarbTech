@@ -11,22 +11,23 @@
     <h1>Bem-vindo de volta</h1>
     <p  class="paragrafo">Acesse sua conta para marcar suas consultas.</p>
     </div>
-    <form>
+    <form (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" placeholder="seu@email.com">
+      <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" placeholder="seu@email.com">
     </div>
     <div class="form-group">
       <div class="senha-linha">
     <label for="password">Password:</label>
     <a href="#" class="senha">Esqueci minha senha</a>
   </div>
-  <input type="password" class="form-control" id="password" placeholder="Senha">
+  <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password" placeholder="Senha">
     </div>
     <div class="checkbox">
       <label><input type="checkbox" class="checkbox-custom"> Lembrar de mim</label>
     </div>
-    <button routerLink="/home-page" type="submit" class="btn-primary">ENTRAR NO ATELIER</button>
+    <p *ngIf="errorMessage" style="color: red; margin-bottom: 10px;">{{errorMessage}}</p>
+    <button type="submit" class="btn-primary">ENTRAR NO ATELIER</button>
     </form>
     <div class="registrar">
         <p class="texto-registro">Não tem uma conta? <button class="botao-registro"  routerLink="/cadastro-cliente" routerLinkActive="active">Criar nova conta</button></p>

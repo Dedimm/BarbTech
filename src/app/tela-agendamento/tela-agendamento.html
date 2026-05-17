@@ -1,0 +1,33 @@
+<div class="tela">
+    <app-header></app-header>
+    <div class="container">
+        <div class="informacoes_perfil">
+            <div class="banner" [style.background-image]="fotoBanner"> </div>
+            <div class="foto_perfil" [style.background-image]="fotoPerfil" ></div>
+        </div>
+        <div class="agendamento">
+          <div class="esquerda">
+  <button class="btn_select" (click)="selecionarAba('servicos')">Serviços</button>
+  <button class="btn_select" (click)="selecionarAba('agenda')">Agenda</button>
+  <button class="btn_select" (click)="selecionarAba('sobre')">Sobre Mim</button>
+</div>
+
+<div class="direita">
+  <app-servico-component 
+  *ngIf="abaSelecionada === 'servicos'"
+  (servicoEscolhido)="onServicoEscolhido($event)" />
+  <app-agenda-component
+  *ngIf="abaSelecionada === 'agenda'"
+  [servico]="servicoSelecionado" />
+
+  <div *ngIf="abaSelecionada === 'sobre'" class="sobre">
+   
+  </div>
+</div>
+        </div>
+        <div class="fotos">
+
+        </div>
+        <app-rodape></app-rodape>
+    </div>
+</div>

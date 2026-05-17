@@ -7,22 +7,22 @@
         <h1>SEJA BEM-VINDO, CLIENTE</h1>
 
         <label>Nome Completo:</label>
-        <input type="text" placeholder="Seu nome completo">
+        <input type="text" [(ngModel)]="formData.nome" placeholder="Seu nome completo">
 
         <label>Email:</label>
-        <input type="email" placeholder="Seu email">
+        <input type="email" [(ngModel)]="formData.email" placeholder="Seu email">
 
         <label>Senha:</label>
-        <input type="password" placeholder="Sua senha">
+        <input type="password" [(ngModel)]="formData.senha" placeholder="Sua senha">
 
         <label>Confirmar Senha:</label>
-        <input type="password" placeholder="Confirme sua senha">
+        <input type="password" [(ngModel)]="formData.confirmarSenha" placeholder="Confirme sua senha">
 
         <label>Telefone:</label>
-        <input type="text" placeholder="Seu telefone">
+        <input type="text" [(ngModel)]="formData.telefone" placeholder="Seu telefone">
 
         <label>CPF:</label>
-        <input type="text" placeholder="Seu CPF">
+        <input type="text" [(ngModel)]="formData.cpf" placeholder="Seu CPF">
 
         <label class="checkbox-linha">
           <input type="checkbox" [(ngModel)]="possuiCondicaoEspecial">
@@ -30,12 +30,13 @@
         </label>
 
         @if(possuiCondicaoEspecial){
-          <input type="text" placeholder="Descreva sua condição">
+          <input type="text" [(ngModel)]="formData.condicao" placeholder="Descreva sua condição">
         }
 
         <div class="separador"></div>
 
-        <button type="submit" class="btn-primary">CADASTRAR</button>
+        <p *ngIf="errorMessage" style="color: red; margin-bottom: 10px;">{{errorMessage}}</p>
+        <button type="button" (click)="onSubmit()" class="btn-primary">CADASTRAR</button>
       </div>
     </div>
 

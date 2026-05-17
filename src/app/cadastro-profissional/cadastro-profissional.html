@@ -15,22 +15,22 @@
         <h1>SEJA BEM-VINDO, PROFISSIONAL</h1>
 
         <label>Nome Completo:</label>
-        <input type="text" placeholder="Seu nome completo">
+        <input type="text" [(ngModel)]="formData.nome" placeholder="Seu nome completo">
 
         <label>Email:</label>
-        <input type="email" placeholder="Seu email">
+        <input type="email" [(ngModel)]="formData.email" placeholder="Seu email">
 
         <label>Senha:</label>
-        <input type="password" placeholder="Sua senha">
+        <input type="password" [(ngModel)]="formData.senha" placeholder="Sua senha">
 
         <label>Confirmar Senha:</label>
-        <input type="password" placeholder="Confirme sua senha">
+        <input type="password" [(ngModel)]="formData.confirmarSenha" placeholder="Confirme sua senha">
 
         <label>Telefone:</label>
-        <input type="text" placeholder="Seu telefone">
+        <input type="text" [(ngModel)]="formData.telefone" placeholder="Seu telefone">
 
         <label>CPF:</label>
-        <input type="text" placeholder="Seu CPF">
+        <input type="text" [(ngModel)]="formData.cpf" placeholder="Seu CPF">
 
         <label class="checkbox-linha">
           <input type="checkbox" [(ngModel)]="possuiCnpj">
@@ -38,13 +38,13 @@
         </label>
 
         @if(possuiCnpj){
-          <input type="text" placeholder="Seu CNPJ">
+          <input type="text" [(ngModel)]="formData.cnpj" placeholder="Seu CNPJ">
         }
 
         <div class="separador"></div>
 
-
-       <button type="submit" class="btn-primary">CADASTRAR</button>
+       <p *ngIf="errorMessage" style="color: red; margin-bottom: 10px;">{{errorMessage}}</p>
+       <button type="button" (click)="onSubmit()" class="btn-primary">CADASTRAR</button>
 
       </div>
     </div>

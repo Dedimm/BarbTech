@@ -1,0 +1,45 @@
+.servicos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+}
+
+.card-servico {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card-servico:hover {
+  border-color: #f5c542;
+}
+
+.card-servico.selecionado {
+  border-color: #f5c542;
+  background: rgba(245, 197, 66, 0.08);
+}
+
+.servico-info h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.servico-info p {
+  margin: 4px 0 0;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.servico-preco span {
+  color: #f5c542;
+  font-weight: bold;
+  font-size: 1rem;
+}

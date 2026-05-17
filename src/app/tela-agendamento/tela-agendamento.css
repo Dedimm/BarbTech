@@ -1,0 +1,195 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Epilogue', sans-serif !important;
+  box-sizing: border-box;
+}
+
+.tela {
+  min-height: 100vh;
+  background-color: #111;
+  color: white;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+
+.informacoes_perfil {
+  width: 100%;
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.banner {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.foto_perfil {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid #f5c518;
+  position: absolute;
+  bottom: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+.agendamento {
+  display: flex;
+  gap: 20px;
+  width: 90%;
+  max-width: 800px;
+  margin-bottom: 40px;
+}
+
+.esquerda {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 160px;
+  border: 1px solid #f5c518;
+  border-radius: 12px;
+  padding: 20px 16px;
+  height: fit-content;
+}
+
+.btn_select {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 8px 4px;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.btn_select:hover {
+  color: #f5c518;
+}
+
+.btn_select.ativo {
+  color: #f5c518;
+}
+
+
+.direita {
+  flex: 1;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 300px;
+}
+
+
+.fotos {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+  padding: 40px 0;
+  font-size: 1.5rem;
+  color: white;
+}
+
+
+@media (max-width: 768px) {
+
+  .banner {
+    height: 160px;
+  }
+
+  .foto_perfil {
+    width: 75px;
+    height: 75px;
+    bottom: -37px;
+  }
+
+  .informacoes_perfil {
+    margin-bottom: 50px;
+  }
+
+ 
+  .agendamento {
+    flex-direction: column;
+    width: 95%;
+    gap: 15px;
+  }
+
+  .esquerda {
+    flex-direction: row;
+    justify-content: space-around;
+    min-width: unset;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .btn_select {
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 6px 10px;
+  }
+
+  .direita {
+    min-height: 200px;
+    padding: 15px;
+  }
+
+  .fotos {
+    width: 95%;
+    font-size: 1.2rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .banner {
+    height: 130px;
+  }
+
+  .foto_perfil {
+    width: 65px;
+    height: 65px;
+    bottom: -32px;
+    border-width: 2px;
+  }
+
+  .informacoes_perfil {
+    margin-bottom: 45px;
+  }
+
+  .esquerda {
+    padding: 10px 8px;
+    gap: 4px;
+  }
+
+  .btn_select {
+    font-size: 0.8rem;
+    padding: 6px 6px;
+  }
+
+  .direita {
+    padding: 12px;
+  }
+
+  .fotos {
+    font-size: 1rem;
+    padding: 20px 0;
+  }
+}

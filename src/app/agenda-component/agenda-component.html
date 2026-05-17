@@ -1,0 +1,55 @@
+<div class="agenda-container">
+
+  <!-- Serviço selecionado -->
+  <div class="servico-ativo" *ngIf="servico">
+    <span>{{ servico.nome }}</span>
+    <span class="duracao">{{ servico.tempo }} min</span>
+  </div>
+
+  <!-- Lista de dias -->
+  <div class="dias-lista">
+    <button 
+      *ngFor="let dia of agenda; let i = index"
+      class="btn-dia"
+      [class.fechado]="dia.fechado"
+      [class.ativo]="diaSelecionado === dia"
+      (click)="selecionarDia(dia, i)">
+      {{ dia.nome }}
+    </button>
+  </div>
+
+  <!-- Slots de horário -->
+  <div class="slots-container" *ngIf="diaSelecionado && !diaSelecionado.fechado">
+    <p class="slots-titulo">Horários disponíveis — {{ diaSelecionado.nome }}</p>
+
+    <div class="slots-grid">
+      <button 
+        *ngFor="let slot of slots"
+        class="btn-slot"
+        [class.ativo]="horarioSelecionado === slot"
+        (click)="selecionarHorario(slot)">
+        {{ slot }}
+      </button>
+    </div>
+
+    <p class="sem-slots" *ngIf="slots.length === 0">
+      Nenhum horário disponível para este dia.
+    </p>
+  </div>
+
+  <!-- Botão confirmar -->
+  <button 
+    class="btn-confirmar" 
+    *ngIf="horarioSelecionado"
+    (click)="confirmar()">
+    Confirmar — {{ diaSelecionado.nome }} às {{ horarioSelecionado }}
+  </button>
+
+  <div class="feedback" *ngIf="confirmado">
+  <span class="feedback-icon">✓</span>
+  <h3>Agendamento confirmado!</h3>
+  <p>{{ servico.nome }} — {{ diaSelecionado.nome }} às {{ horarioSelecionado }}</p>
+  <button class="btn-novo" (click)="novoAgendamento()">Fazer outro agendamento</button>
+</div>
+
+</div>
