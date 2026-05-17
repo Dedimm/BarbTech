@@ -1,0 +1,306 @@
+<div class="page-wrapper">
+
+  <!-- ═══ BANNER ═══ -->
+  <div
+    class="banner"
+    [style.backgroundImage]="bannerUrl ? 'url(' + bannerUrl + ')' : 'none'"
+  >
+    <div class="banner-overlay"></div>
+    <div class="banner-grain"></div>
+    <label class="banner-change-btn" title="Alterar banner">
+      <input type="file" accept="image/*" (change)="onBannerChange($event)" hidden />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      ALTERAR BANNER
+    </label>
+  </div>
+
+  <!-- ═══ PROFILE HEADER ═══ -->
+  <div class="profile-header">
+    <div class="avatar-wrap">
+      <img
+        [src]="avatarUrl || defaultAvatar"
+        alt="Foto de {{ cliente.nome }}"
+        class="avatar"
+      />
+      <label class="avatar-edit" title="Alterar foto">
+        <input type="file" accept="image/*" (change)="onAvatarChange($event)" hidden />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </label>
+    </div>
+    <div class="profile-meta">
+      <h1 class="profile-name">{{ cliente.nome }}</h1>
+      <p class="profile-tag">CONFIGURAÇÕES DO CLIENTE</p>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN GRID ═══ -->
+  <div class="main-grid">
+
+    <!-- ── ENDEREÇO ── -->
+    <section class="card" [class.card--loaded]="loaded">
+      <header class="card__header">
+        <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        ENDEREÇO
+      </header>
+
+      <div class="card__body">
+        <div class="field field--full">
+          <label class="field__label">RUA</label>
+          <input
+            class="field__input"
+            type="text"
+            [(ngModel)]="endereco.rua"
+            placeholder="Nome da rua"
+            name="rua"
+          />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field__label">NÚMERO</label>
+            <input
+              class="field__input"
+              type="text"
+              [(ngModel)]="endereco.numero"
+              placeholder="Nº"
+              name="numero"
+            />
+          </div>
+          <div class="field">
+            <label class="field__label">CEP</label>
+            <input
+              class="field__input"
+              type="text"
+              [(ngModel)]="endereco.cep"
+              placeholder="00000-000"
+              name="cep"
+              maxlength="9"
+              (blur)="buscarCep()"
+              (input)="formatarCep($event)"
+            />
+          </div>
+        </div>
+
+        <div class="field field--full">
+          <label class="field__label">BAIRRO</label>
+          <input
+            class="field__input"
+            type="text"
+            [(ngModel)]="endereco.bairro"
+            placeholder="Bairro"
+            name="bairro"
+          />
+        </div>
+
+        <div class="field field--full">
+          <label class="field__label">CIDADE / UF</label>
+          <input
+            class="field__input"
+            type="text"
+            [(ngModel)]="endereco.cidade"
+            placeholder="Cidade"
+            name="cidade"
+          />
+        </div>
+
+        <div class="cep-status" [class.cep-status--error]="cepError" *ngIf="cepMsg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ cepMsg }}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONDIÇÕES ESPECIAIS ── -->
+    <section class="card" [class.card--loaded]="loaded">
+      <header class="card__header">
+        <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        CONDIÇÕES ESPECIAIS
+      </header>
+
+      <div class="card__body">
+        <p class="card__desc">
+          Necessita de acessibilidade ou possui alguma alergia a produtos específicos?
+        </p>
+
+        <!-- Toggle Acessibilidade -->
+        <div class="toggle-row" [class.toggle-row--active]="condicoes.requerAcessibilidade">
+          <span class="toggle-row__label">REQUER ACESSIBILIDADE</span>
+          <button
+            class="toggle"
+            [class.toggle--on]="condicoes.requerAcessibilidade"
+            (click)="condicoes.requerAcessibilidade = !condicoes.requerAcessibilidade"
+            role="switch"
+            [attr.aria-checked]="condicoes.requerAcessibilidade"
+            type="button"
+          >
+            <span class="toggle__thumb"></span>
+          </button>
+        </div>
+
+        <div class="expandable" [class.expandable--open]="condicoes.requerAcessibilidade">
+          <div class="field field--full">
+            <label class="field__label">DETALHES DE ACESSIBILIDADE</label>
+            <textarea
+              class="field__input field__textarea"
+              [(ngModel)]="condicoes.detalhesAcessibilidade"
+              placeholder="Descreva as necessidades de acessibilidade..."
+              name="detalhesAcessibilidade"
+              [disabled]="!condicoes.requerAcessibilidade"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Toggle Alergia -->
+        <div class="toggle-row" [class.toggle-row--active]="condicoes.possuiAlergia">
+          <span class="toggle-row__label">POSSUI ALERGIA</span>
+          <button
+            class="toggle"
+            [class.toggle--on]="condicoes.possuiAlergia"
+            (click)="condicoes.possuiAlergia = !condicoes.possuiAlergia"
+            role="switch"
+            [attr.aria-checked]="condicoes.possuiAlergia"
+            type="button"
+          >
+            <span class="toggle__thumb"></span>
+          </button>
+        </div>
+
+        <div class="expandable" [class.expandable--open]="condicoes.possuiAlergia">
+          <div class="field field--full">
+            <label class="field__label">DESCREVA AS ALERGIAS</label>
+            <textarea
+              class="field__input field__textarea"
+              [(ngModel)]="condicoes.descricaoAlergia"
+              placeholder="Descreva outras observações..."
+              name="descricaoAlergia"
+              [disabled]="!condicoes.possuiAlergia"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /main-grid -->
+
+  <!-- ═══ AGENDAMENTOS ═══ -->
+  <section class="card card--full" [class.card--loaded]="loaded">
+    <header class="card__header">
+      <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      MEUS AGENDAMENTOS
+      <span class="badge-count">{{ agendamentos.length }}</span>
+    </header>
+
+    <div class="card__body">
+
+      <ng-container *ngIf="agendamentos.length > 0; else emptyAgendamentos">
+        <div class="agendamentos">
+          <div
+            class="agendamento"
+            *ngFor="let ag of agendamentos; trackBy: trackById"
+            [class.agendamento--hoje]="isHoje(ag.data)"
+            (click)="verAgendamento(ag)"
+          >
+            <div class="agendamento__icon">
+              <!-- Ícone: corte -->
+              <svg *ngIf="ag.tipo === 'corte'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
+                <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+                <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+                <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+              </svg>
+              <!-- Ícone: barba -->
+              <svg *ngIf="ag.tipo === 'barba'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M5.5 20a7 7 0 0 1 13 0"/>
+              </svg>
+              <!-- Ícone: combo / outro -->
+              <svg *ngIf="ag.tipo !== 'corte' && ag.tipo !== 'barba'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+
+            <div class="agendamento__info">
+              <span class="agendamento__servico">{{ ag.servico }}</span>
+              <span class="agendamento__data">
+                {{ ag.data | date:'MMM dd, yyyy':'':'pt-BR' | uppercase }} &bull; {{ ag.hora }}
+              </span>
+            </div>
+
+            <span class="agendamento__hoje-badge" *ngIf="isHoje(ag.data)">HOJE</span>
+
+            <span class="agendamento__status" [class]="'status--' + ag.status">
+              {{ statusLabel(ag.status) }}
+            </span>
+
+            <svg class="agendamento__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #emptyAgendamentos>
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="44" height="44">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <p>Nenhum agendamento encontrado</p>
+        </div>
+      </ng-template>
+
+    </div>
+  </section>
+
+  <!-- ═══ SAVE BUTTON ═══ -->
+  <div class="save-area">
+    <button
+      class="save-btn"
+      [class.save-btn--loading]="salvando"
+      (click)="salvarAlteracoes()"
+      [disabled]="salvando"
+      type="button"
+    >
+      <span class="save-btn__text" *ngIf="!salvando">SALVAR ALTERAÇÕES</span>
+      <span class="save-btn__loader" *ngIf="salvando">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </span>
+    </button>
+  </div>
+
+  <!-- ═══ TOAST ═══ -->
+  <div class="toast" [class.toast--show]="toastVisible" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    {{ toastMsg }}
+  </div>
+
+</div>
