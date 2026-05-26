@@ -7,6 +7,10 @@ import { CadastroProfissional } from './cadastro-profissional/cadastro-profissio
 import { CadastroCliente } from './cadastro-cliente/cadastro-cliente';
 import { HomePage } from './home-page/home-page';
 import { ConfiguracaoClienteComponent } from './configuracao-cliente/configuracao-cliente.component';
+import { TelaProfissionalPainel } from './tela-profissional-painel/tela-profissional-painel';
+import { TelaAgendamento } from './tela-agendamento/tela-agendamento';
+import { ListaBarbeiro } from './lista-barbeiro/lista-barbeiro';
+import { ListaServico } from './lista-servico/lista-servico';
 
 const routes: Routes = [
   {path: '', redirectTo: '/tela-inicial', pathMatch: 'full'},
@@ -16,7 +20,11 @@ const routes: Routes = [
   {path: 'cadastro-profissional', component: CadastroProfissional},
   {path: 'cadastro-cliente', component: CadastroCliente},
   {path: 'home-page', component: HomePage},
-  {path: 'configuracao-cliente', component: ConfiguracaoClienteComponent}
+  {path: 'configuracao-cliente', component: ConfiguracaoClienteComponent},
+  {path: 'configuracao-profissional', component: TelaProfissionalPainel},
+  {path: 'agendamento', component: TelaAgendamento},
+  {path: 'lista-barbeiro', component: ListaBarbeiro },
+  {path: 'lista-servico', component: ListaServico }
 ];
 
 @NgModule({

@@ -1,0 +1,72 @@
+.lista-container {
+  background-color: #1a1a1a;
+  min-height: 100vh;
+  padding: 40px 32px;
+}
+
+.lista-titulo {
+  color: #d4a017;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid #d4a017;
+  border-radius: 10px;
+  background-color: #222;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.card:hover {
+  background-color: #2a2a2a;
+}
+
+.card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #d4a017;
+  color: #1a1a1a;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card__info {
+  flex: 1;
+}
+
+.card__nome {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.card__especialidade {
+  color: #aaa;
+  font-size: 13px;
+  margin: 0;
+}
+
+.card__avaliacao {
+  color: #d4a017;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}

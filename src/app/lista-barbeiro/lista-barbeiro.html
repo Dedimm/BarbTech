@@ -1,0 +1,17 @@
+<app-header></app-header>
+
+<main class="lista-container">
+  <h2 class="lista-titulo">Barbeiros</h2>
+
+  <div class="lista">
+    <div class="card" *ngFor="let barbeiro of barbeiros">
+      <div class="card__avatar">{{ barbeiro.nome.charAt(0) }}</div>
+      <div class="card__info">
+        <h3 class="card__nome">{{ barbeiro.nome }}</h3>
+      </div>
+      <span class="card__avaliacao">⭐ {{ barbeiro.avaliacao }}</span>
+    </div>
+  </div>
+</main>
+
+<app-rodape></app-rodape>

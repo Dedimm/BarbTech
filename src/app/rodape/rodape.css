@@ -1,0 +1,88 @@
+.footer {
+  background-color: #1a1a1a;
+  font-family: sans-serif;
+  border-top: 1px solid #2a2a2a;
+}
+
+.footer__main {
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 32px;
+  gap: 32px;
+}
+
+.footer__brand-title {
+  color: #d4a017;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.footer__brand-desc {
+  color: #888;
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 220px;
+}
+
+.footer__columns {
+  display: flex;
+  gap: 64px;
+}
+
+.footer__col-title {
+  color: #d4a017;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.footer__col-link {
+  display: block;
+  color: #aaa;
+  font-size: 13px;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.footer__col-link:hover {
+  color: #fff;
+}
+
+.footer__col-text {
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.footer__bottom {
+  border-top: 1px solid #2a2a2a;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer__copy {
+  color: #666;
+  font-size: 12px;
+}
+
+.footer__legal {
+  display: flex;
+  gap: 24px;
+}
+
+.footer__legal a {
+  color: #888;
+  font-size: 11px;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.footer__legal a:hover {
+  color: #fff;
+}

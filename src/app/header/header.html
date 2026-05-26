@@ -1,3 +1,16 @@
-<header>
-    <h1>BarbTech</h1>
-</header>
+<div class="header">
+  <header class="header__content">
+    <h1 class="header__title">BarbTech</h1>
+    <nav class="header__nav">
+      <a routerLink="/home-page" routerLinkActive="active" class="header__link">Explorar</a>
+      <a routerLink="/lista-barbeiro" routerLinkActive="active" class="header__link">Barbeiros</a>
+      <a routerLink="/lista-servico" routerLinkActive="active" class="header__link">Serviços</a>
+    </nav>
+    <button class="header__button" routerLink="/notificacoes" routerLinkActive="active">
+  <img src="Icon.png" alt="Notificações" />
+</button>
+<button class="header__button" routerLink="/configuracao-cliente" routerLinkActive="active">
+  <img src="IconPerfil.png" alt="Perfil" />
+</button>
+  </header>
+</div>

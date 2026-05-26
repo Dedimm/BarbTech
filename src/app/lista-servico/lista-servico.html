@@ -1,0 +1,35 @@
+<app-header></app-header>
+
+<main class="lista-container">
+  <h2 class="lista-titulo">Serviços</h2>
+
+  <div class="lista-search">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Pesquisar serviço..."
+      (input)="filtrar($event)"
+    />
+  </div>
+
+  <div class="lista">
+    <div class="card" *ngFor="let servico of servicosFiltrados">
+      <div class="card__icone">✂</div>
+      <div class="card__info">
+        <h3 class="card__nome">{{ servico.nome }}</h3>
+        <p class="card__tempo">⏱ {{ servico.tempo }} min</p>
+        <p class="card__barbeiros">
+          👤 {{ servico.barbeiros.length > 0 ? servico.barbeiros[0].nome : 'Nenhum barbeiro' }}
+          <span *ngIf="servico.barbeiros.length > 1"> +{{ servico.barbeiros.length - 1 }}</span>
+        </p>
+      </div>
+      <span class="card__valor">R$ {{ servico.valor }}</span>
+    </div>
+
+    <p class="lista-vazia" *ngIf="servicosFiltrados.length === 0">
+      Nenhum serviço encontrado.
+    </p>
+  </div>
+</main>
+
+<app-rodape></app-rodape>

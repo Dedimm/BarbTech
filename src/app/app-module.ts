@@ -17,6 +17,8 @@ import { TelaProfissionalPainel } from './tela-profissional-painel/tela-profissi
 import { TelaAgendamento } from './tela-agendamento/tela-agendamento';
 import { ServicoComponent } from './servico-component/servico-component';
 import { AgendaComponent } from './agenda-component/agenda-component';
+import { ListaBarbeiro } from './lista-barbeiro/lista-barbeiro';
+import { ListaServico } from './lista-servico/lista-servico';
 
 @NgModule({
   declarations: [
@@ -33,12 +35,14 @@ import { AgendaComponent } from './agenda-component/agenda-component';
     TelaAgendamento,
     ServicoComponent,
     AgendaComponent,
+    ListaBarbeiro,
+    ListaServico,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptorsFromDi()),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [App],
 })
