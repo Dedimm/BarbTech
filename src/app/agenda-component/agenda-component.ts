@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Host, Inject, forwardRef } from '@angular/core';
 import { ProfissionalService } from '../services/profissional';
+import { TelaAgendamento } from '../tela-agendamento/tela-agendamento';
 
 @Component({
   selector: 'app-agenda-component',
@@ -17,30 +18,38 @@ export class AgendaComponent implements OnInit {
   slots: string[] = [];
   horarioSelecionado: string | null = null;
 
-  constructor(private profissionalService: ProfissionalService) {}
+  constructor(
+    private profesionalService: ProfissionalService,
+    @Host() @Inject(forwardRef(() => TelaAgendamento)) private telaAgendamento: TelaAgendamento
+  ) {}
 
   ngOnInit() {
-    this.agenda = this.profissionalService.getAgenda();
+    this.agenda = this.profesionalService.getAgenda();
   }
 
   selecionarDia(dia: any, index: number) {
     if (dia.fechado) return;
     this.diaSelecionado = dia;
     this.horarioSelecionado = null;
-    const duracao = this.servico?.tempo ?? 30;
-    this.slots = this.profissionalService.gerarSlots(index, duracao);
+    const duration = this.servico?.tempo ?? 30;
+    this.slots = this.profesionalService.gerarSlots(index, duration);
   }
 
   selecionarHorario(slot: string) {
     this.horarioSelecionado = slot;
   }
+
   confirmar() {
-  this.confirmado = true;
-}
-novoAgendamento() {
-  this.confirmado = false;
-  this.horarioSelecionado = null;
-  this.diaSelecionado = null;
-  this.slots = [];
-}
+    if (!this.horarioSelecionado) return;
+
+    this.confirmado = true;
+    this.telaAgendamento.finalizarAgendamentoNoBanco(this.horarioSelecionado, 2);
+  }
+
+  novoAgendamento() {
+    this.confirmado = false;
+    this.horarioSelecionado = null;
+    this.diaSelecionado = null;
+    this.slots = [];
+  }
 }

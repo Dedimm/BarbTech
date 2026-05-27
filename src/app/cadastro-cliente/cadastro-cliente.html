@@ -3,41 +3,41 @@
 
    
     <div class="direita">
-      <div class="form-group">
-        <h1>SEJA BEM-VINDO, CLIENTE</h1>
+  <form (ngSubmit)="enviarDados()" class="form-group">
+    <h1>SEJA BEM-VINDO, CLIENTE</h1>
 
-        <label>Nome Completo:</label>
-        <input type="text" placeholder="Seu nome completo">
+    <label>Nome Completo:</label>
+    <input type="text" name="nome" [(ngModel)]="dados.nome" placeholder="Seu nome completo">
 
-        <label>Email:</label>
-        <input type="email" placeholder="Seu email">
+    <label>Email:</label>
+    <input type="email" name="email" [(ngModel)]="dados.email" placeholder="Seu email">
 
-        <label>Senha:</label>
-        <input type="password" placeholder="Sua senha">
+    <label>Senha:</label>
+    <input type="password" name="senha" [(ngModel)]="dados.senha" placeholder="Sua senha">
 
-        <label>Confirmar Senha:</label>
-        <input type="password" placeholder="Confirme sua senha">
+    <label>Confirmar Senha:</label>
+    <input type="password" name="confirmarSenha" [(ngModel)]="dados.confirmarSenha" placeholder="Confirme sua senha">
 
-        <label>Telefone:</label>
-        <input type="text" placeholder="Seu telefone">
+    <label>Telefone:</label>
+    <input type="text" name="telefone" [(ngModel)]="dados.telefone" placeholder="Seu telefone">
 
-        <label>CPF:</label>
-        <input type="text" placeholder="Seu CPF">
+    <label>CPF:</label>
+    <input type="text" name="cpf" [(ngModel)]="dados.cpf" placeholder="Seu CPF">
 
-        <label class="checkbox-linha">
-          <input type="checkbox" [(ngModel)]="possuiCondicaoEspecial">
-          Possui alguma condição especial? (Ex: Idade avançada, mobilidade reduzida, etc.)
-        </label>
+    <label class="checkbox-linha">
+      <input type="checkbox" name="condicao" [(ngModel)]="possuiCondicaoEspecial">
+      Possui alguma condição especial? (Ex: Idade avançada, mobilidade reduzida, etc.)
+    </label>
 
-        @if(possuiCondicaoEspecial){
-          <input type="text" placeholder="Descreva sua condição">
-        }
+    @if(possuiCondicaoEspecial){
+      <input type="text" name="descricaoCondicao" [(ngModel)]="dados.descricaoCondicao" placeholder="Descreva sua condição">
+    }
 
-        <div class="separador"></div>
+    <div class="separador"></div>
 
-        <button type="submit" class="btn-primary">CADASTRAR</button>
-      </div>
-    </div>
+    <button type="submit" class="btn-primary">CADASTRAR</button>
+  </form>
+</div>
 
 
     <div class="esquerda">

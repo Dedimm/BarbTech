@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ProfissionalService } from '../services/profissional';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-servico-component',
@@ -8,16 +8,26 @@ import { ProfissionalService } from '../services/profissional';
   styleUrl: './servico-component.css'
 })
 export class ServicoComponent implements OnInit {
-
   listaServicos: any[] = [];
   servicoSelecionado: any = null;
 
   @Output() servicoEscolhido = new EventEmitter<any>();
 
-  constructor(private profissionalService: ProfissionalService) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.listaServicos = this.profissionalService.getServicos();
+    this.carregarServicosDoBanco();
+  }
+
+  carregarServicosDoBanco() {
+    this.http.get<any[]>('http://localhost:8000/api/servicos/').subscribe({
+      next: (dados) => {
+        this.listaServicos = dados;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   selecionarServico(servico: any) {

@@ -18,10 +18,10 @@
     <div class="especialistas-container">
         <div>
             <h2>Mestre do oficio</h2>
-            <p>Especialistas mais bem avalidaos proximo a você</p>
+            <p>Especialistas mais bem avaliados próximo a você</p>
             <div class="especialistas">
                 <div class="especialistas-carroussel">
-                    <div *ngFor="let especialista of especialistas; let i = index"  (mouseenter)="selecionar(i)">
+                    <div *ngFor="let especialista of specialists; let i = index" (mouseenter)="selecionar(i)">
                         <img class="especialistas-image" [src]="especialista.url" />
                         <p>{{especialista.nome}}</p>
                     </div>
@@ -30,12 +30,12 @@
         </div>
         <div class="especialistas-info">
             <div class="especialistas-foto">
-                <img [src]="especialistas[selectedIndex].url" />
+                <img [src]="specialists[selectedIndex].url" />
             </div>
             <div class="especialistas-dados">
-                <h2>{{ especialistas[selectedIndex].nomeCompleto }}</h2>
-                <p>{{ especialistas[selectedIndex].descricao }}</p>
-                <button>Agendar Agora</button>
+                <h2>{{ specialists[selectedIndex].nomeCompleto }}</h2>
+                <p>{{ specialists[selectedIndex].descricao }}</p>
+                <button (click)="fazerAgendamento()">Agendar Agora</button>
             </div>
         </div>
     </div>
