@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Host, Inject, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { ProfissionalService } from '../services/profissional';
-import { AgendamentoService } from '../services/agendamento.service';
+import { TelaAgendamento } from '../tela-agendamento/tela-agendamento';
 
 @Component({
   selector: 'app-agenda-component',
@@ -22,19 +22,27 @@ export class AgendaComponent implements OnInit {
 
   constructor(
     private profissionalService: ProfissionalService,
-    private agendamentoService: AgendamentoService
+    private cdr: ChangeDetectorRef,
+    @Host() @Inject(forwardRef(() => TelaAgendamento)) private telaAgendamento: TelaAgendamento
   ) {}
 
   ngOnInit() {
-    this.agenda = this.profissionalService.getAgenda();
+    const barbeiroId = this.telaAgendamento.barbeiro?.id || 1;
+    this.profissionalService.getAgenda(barbeiroId.toString()).subscribe({
+      next: (agenda) => {
+        this.agenda = agenda;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Erro ao obter agenda:', err)
+    });
   }
 
   selecionarDia(dia: any, index: number) {
     if (dia.fechado) return;
     this.diaSelecionado = dia;
     this.horarioSelecionado = null;
-    const duracao = this.servico?.tempo ?? 30;
-    this.slots = this.profissionalService.gerarSlots(index, duracao);
+    const duration = this.servico?.tempo ?? 30;
+    this.slots = this.profissionalService.gerarSlots(this.agenda, dia.dia_semana, duration);
   }
 
   selecionarHorario(slot: string) {
@@ -42,17 +50,11 @@ export class AgendaComponent implements OnInit {
   }
 
   confirmar() {
-    if (!this.diaSelecionado || !this.horarioSelecionado) return;
-
-    this.agendamentoService.salvarAgendamento({
-      dia: this.diaSelecionado.nome,
-      horario: this.horarioSelecionado,
-      servico: this.servico?.nome ?? 'Não informado',
-      cliente: this.nomeCliente || 'Cliente',
-      duracaoMin: this.servico?.tempo ?? 30,
-    });
+    if (!this.horarioSelecionado || !this.diaSelecionado) return;
 
     this.confirmado = true;
+    const barbeiroId = this.telaAgendamento.barbeiro?.id || 1;
+    this.telaAgendamento.finalizarAgendamentoNoBanco(this.horarioSelecionado, barbeiroId);
   }
 
   novoAgendamento() {

@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BarbeiroService {
-  private readonly CHAVE = 'barbeiros';
+  private apiUrl = environment.apiUrl;
 
-  getBarbeiros() {
-    const salvo = localStorage.getItem(this.CHAVE);
-    return salvo ? JSON.parse(salvo) : [
-      { id: 1, nome: 'Carlos Silva', especialidade: 'Corte + Barba', avaliacao: 4.8,
-        servicos: ['Corte + Barba', 'Barba Completa'] },
-      { id: 2, nome: 'Rafael Souza', especialidade: 'Degradê / Fade', avaliacao: 4.6,
-        servicos: ['Degradê / Fade', 'Corte Social'] },
-      { id: 3, nome: 'Lucas Mendes', especialidade: 'Corte Social', avaliacao: 4.9,
-        servicos: ['Corte Social', 'Corte + Barba', 'Degradê / Fade'] },
-    ];
-  }
+  constructor(private http: HttpClient) {}
 
-  salvarBarbeiros(barbeiros: any[]) {
-    localStorage.setItem(this.CHAVE, JSON.stringify(barbeiros));
+  getBarbeiros(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/usuarios/?is_barbeiro=true`).pipe(
+      map(usuarios => usuarios.map(u => ({
+        id: u.id,
+        nome: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.username,
+        especialidade: u.nome_barbearia || 'Especialista',
+        foto_url: u.foto_url || 'assets/image/avatar-padrao.png',
+        bio: u.bio || '',
+        telefone: u.telefone || ''
+      })))
+    );
   }
 }

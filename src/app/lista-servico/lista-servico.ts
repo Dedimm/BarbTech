@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ProfissionalService } from '../services/profissional';
-import { BarbeiroService } from '../services/barbeiro.service';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-lista-servico',
@@ -12,20 +13,30 @@ export class ListaServico implements OnInit {
   servicos: any[] = [];
   servicosFiltrados: any[] = [];
 
-  constructor(
-    private profissionalService: ProfissionalService,
-    private barbeiroService: BarbeiroService
-  ) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    const barbeiros = this.barbeiroService.getBarbeiros();
-
-    this.servicos = this.profissionalService.getServicos().map((servico: any) => ({
-      ...servico,
-      barbeiros: barbeiros.filter((b: any) => b.servicos.includes(servico.nome))
-    }));
-
-    this.servicosFiltrados = this.servicos;
+    // Carregar todos os serviços do banco
+    forkJoin({
+      servicos: this.http.get<any[]>(`${environment.apiUrl}/servicos/`),
+      barbeiros: this.http.get<any[]>(`${environment.apiUrl}/usuarios/?is_barbeiro=true`)
+    }).subscribe({
+      next: ({ servicos, barbeiros }) => {
+        this.servicos = servicos.map(s => ({
+          id: s.id,
+          nome: s.nome,
+          valor: s.preco,
+          tempo: s.duracao_minutos,
+          barbeiros: barbeiros.filter(b => b.id === s.barbeiro).map(b => ({
+            id: b.id,
+            nome: `${b.first_name || ''} ${b.last_name || ''}`.trim() || b.username
+          }))
+        }));
+        this.servicosFiltrados = this.servicos;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar serviços:', err)
+    });
   }
 
   filtrar(evento: Event) {

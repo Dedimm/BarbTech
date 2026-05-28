@@ -3,10 +3,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 /* ═══════════════════════════════════════
    INTERFACES
-═══════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 
 export interface Cliente {
   id: number;
@@ -43,7 +45,7 @@ export interface Agendamento {
 
 /* ═══════════════════════════════════════
    COMPONENT
-═══════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 
 @Component({
   selector: 'app-configuracao-cliente',
@@ -67,60 +69,39 @@ export class ConfiguracaoClienteComponent implements OnInit, OnDestroy {
   bannerUrl = '';
   readonly defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFhMWExYSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMzgiIHI9IjIwIiBmaWxsPSIjMmEyYTJhIi8+PHBhdGggZD0iTTE1IDkwYzAtMTkuOCAxNi4xLTM1IDM1LTM1czM1IDE1LjIgMzUgMzUiIGZpbGw9IiMyYTJhMmEiLz48L3N2Zz4=';
 
-  /* ── Dados do cliente (substituir pela chamada real) ── */
+  /* ── Dados do cliente ── */
   cliente: Cliente = {
-    id: 1,
-    nome: 'ARTHUR STERLING',
-    email: 'arthur@barbtech.com'
+    id: 0,
+    nome: '',
+    email: ''
   };
 
   endereco: Endereco = {
-    rua: 'Avenida Paulista',
-    numero: '1200',
-    cep: '01310-100',
-    bairro: 'Bela Vista',
-    cidade: 'São Paulo'
+    rua: '',
+    numero: '',
+    cep: '',
+    bairro: '',
+    cidade: ''
   };
 
   condicoes: CondicoesEspeciais = {
-    requerAcessibilidade: true,
+    requerAcessibilidade: false,
     detalhesAcessibilidade: '',
     possuiAlergia: false,
     descricaoAlergia: ''
   };
 
-  agendamentos: Agendamento[] = [
-    {
-      id: 1,
-      servico: 'Corte Masculino Premium',
-      data: new Date('2023-11-12'),
-      hora: '14:30',
-      tipo: 'corte',
-      status: 'confirmado'
-    },
-    {
-      id: 2,
-      servico: 'Barboterapia Imperial',
-      data: new Date('2023-11-28'),
-      hora: '10:00',
-      tipo: 'barba',
-      status: 'confirmado'
-    }
-  ];
+  agendamentos: Agendamento[] = [];
 
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
   private subscriptions = new Subscription();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   /* ── Lifecycle ── */
 
   ngOnInit(): void {
-    // Simula carregamento inicial
-    setTimeout(() => (this.loaded = true), 100);
-
-    // Descomente para carregar dados reais da API:
-    // this.carregarDados();
+    this.carregarDados();
   }
 
   ngOnDestroy(): void {
@@ -132,22 +113,36 @@ export class ConfiguracaoClienteComponent implements OnInit, OnDestroy {
 
   onAvatarChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.[0]) {
-      this.lerArquivoComoUrl(input.files[0], (url) => (this.avatarUrl = url));
+    const file = input.files?.[0];
+    const userId = this.authService.getUserId();
+    if (file && userId) {
+      const formData = new FormData();
+      formData.append('foto', file);
+      this.http.post<any>(`${environment.apiUrl}/usuarios/${userId}/upload-foto/`, formData).subscribe({
+        next: (res) => {
+          this.avatarUrl = res.foto_url;
+          this.exibirToast('Foto de perfil atualizada!');
+        },
+        error: (err) => console.error(err)
+      });
     }
   }
 
   onBannerChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.[0]) {
-      this.lerArquivoComoUrl(input.files[0], (url) => (this.bannerUrl = url));
+    const file = input.files?.[0];
+    const userId = this.authService.getUserId();
+    if (file && userId) {
+      const formData = new FormData();
+      formData.append('banner', file);
+      this.http.post<any>(`${environment.apiUrl}/usuarios/${userId}/upload-banner/`, formData).subscribe({
+        next: (res) => {
+          this.bannerUrl = res.banner_url;
+          this.exibirToast('Banner atualizado!');
+        },
+        error: (err) => console.error(err)
+      });
     }
-  }
-
-  private lerArquivoComoUrl(file: File, callback: (url: string) => void): void {
-    const reader = new FileReader();
-    reader.onload = (e) => callback(e.target?.result as string);
-    reader.readAsDataURL(file);
   }
 
   /* ── CEP ── */
@@ -222,8 +217,6 @@ export class ConfiguracaoClienteComponent implements OnInit, OnDestroy {
 
   verAgendamento(ag: Agendamento): void {
     console.log('Navegar para agendamento:', ag.id);
-    // Exemplo com Router:
-    // this.router.navigate(['/agendamentos', ag.id]);
   }
 
   /* ── Salvar ── */
@@ -231,56 +224,105 @@ export class ConfiguracaoClienteComponent implements OnInit, OnDestroy {
   salvarAlteracoes(): void {
     if (this.salvando) return;
     this.salvando = true;
+    const userId = this.authService.getUserId();
+    if (!userId) return;
 
     const payload = {
-      clienteId:  this.cliente.id,
-      endereco:   { ...this.endereco },
-      condicoes:  { ...this.condicoes }
+      endereco_rua: this.endereco.rua,
+      endereco_numero: this.endereco.numero,
+      endereco_cep: this.endereco.cep,
+      endereco_bairro: this.endereco.bairro,
+      endereco_cidade: this.endereco.cidade,
+      requer_acessibilidade: this.condicoes.requerAcessibilidade,
+      detalhes_acessibilidade: this.condicoes.detalhesAcessibilidade,
+      possui_alergia: this.condicoes.possuiAlergia,
+      descricao_alergia: this.condicoes.descricaoAlergia
     };
 
-    // ── Substitua o setTimeout pela chamada real à sua API: ──
-    //
-    // const sub = this.http
-    //   .put(`/api/clientes/${this.cliente.id}/configuracoes`, payload)
-    //   .subscribe({
-    //     next: () => {
-    //       this.salvando = false;
-    //       this.exibirToast('Alterações salvas com sucesso!');
-    //     },
-    //     error: (err) => {
-    //       this.salvando = false;
-    //       this.exibirToast('Erro ao salvar. Tente novamente.');
-    //       console.error(err);
-    //     }
-    //   });
-    // this.subscriptions.add(sub);
-
-    setTimeout(() => {
-      this.salvando = false;
-      this.exibirToast('Alterações salvas com sucesso!');
-      console.log('[BarbTech] Payload salvo:', payload);
-    }, 1400);
+    this.http.patch<any>(`${environment.apiUrl}/usuarios/${userId}/`, payload).subscribe({
+      next: () => {
+        this.salvando = false;
+        this.exibirToast('Alterações salvas com sucesso!');
+      },
+      error: (err) => {
+        this.salvando = false;
+        this.exibirToast('Erro ao salvar. Tente novamente.');
+        console.error(err);
+      }
+    });
   }
 
-  /* ── Carregamento inicial (exemplo com API real) ── */
+  /* ── Carregamento inicial com API real ── */
 
-  // private carregarDados(): void {
-  //   const sub = this.http
-  //     .get<{ cliente: Cliente; endereco: Endereco; condicoes: CondicoesEspeciais; agendamentos: Agendamento[]; avatarUrl: string }>
-  //     (`/api/clientes/${this.cliente.id}/configuracoes`)
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.cliente      = data.cliente;
-  //         this.endereco     = data.endereco;
-  //         this.condicoes    = data.condicoes;
-  //         this.agendamentos = data.agendamentos.map(ag => ({ ...ag, data: new Date(ag.data) }));
-  //         this.avatarUrl    = data.avatarUrl;
-  //         this.loaded       = true;
-  //       },
-  //       error: (err) => console.error('[BarbTech] Erro ao carregar dados:', err)
-  //     });
-  //   this.subscriptions.add(sub);
-  // }
+  private carregarDados(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
+
+    // Load customer profile info
+    this.http.get<any>(`${environment.apiUrl}/usuarios/${userId}/`).subscribe({
+      next: (res) => {
+        this.cliente = {
+          id: res.id,
+          nome: `${res.first_name || ''} ${res.last_name || ''}`.trim() || 'Cliente BarbTech',
+          email: res.email
+        };
+
+        this.endereco = {
+          rua: res.endereco_rua || '',
+          numero: res.endereco_numero || '',
+          cep: res.endereco_cep || '',
+          bairro: res.endereco_bairro || '',
+          cidade: res.endereco_cidade || ''
+        };
+
+        this.condicoes = {
+          requerAcessibilidade: res.requer_acessibilidade || false,
+          detalhesAcessibilidade: res.detalhes_acessibilidade || '',
+          possuiAlergia: res.possui_alergia || false,
+          descricaoAlergia: res.descricao_alergia || ''
+        };
+
+        this.avatarUrl = res.foto_url || '';
+        this.bannerUrl = res.banner_url || '';
+        this.loaded = true;
+      },
+      error: (err) => {
+        console.error('[BarbTech] Erro ao carregar dados do cliente:', err);
+        this.loaded = true; // garante a renderização do layout mesmo em erro
+      }
+    });
+
+    // Load client bookings
+    this.http.get<any[]>(`${environment.apiUrl}/agendamentos/?cliente=${userId}`).subscribe({
+      next: (res) => {
+        this.agendamentos = res.map(ag => {
+          const dt = new Date(ag.data_hora);
+          const hrs = String(dt.getHours()).padStart(2, '0');
+          const mins = String(dt.getMinutes()).padStart(2, '0');
+          
+          let tipo: TipoServico = 'corte';
+          const servName = (ag.servico_nome || '').toLowerCase();
+          if (servName.includes('barba')) tipo = 'barba';
+          else if (servName.includes('combo') || servName.includes('+')) tipo = 'combo';
+
+          let status: StatusAgendamento = 'pendente';
+          if (ag.status === 'AGENDADO') status = 'confirmado';
+          else if (ag.status === 'CONCLUIDO') status = 'concluido';
+          else if (ag.status === 'CANCELADO') status = 'cancelado';
+
+          return {
+            id: ag.id,
+            servico: ag.servico_nome || 'Serviço BarbTech',
+            data: dt,
+            hora: `${hrs}:${mins}`,
+            tipo,
+            status
+          };
+        });
+      },
+      error: (err) => console.error('[BarbTech] Erro ao carregar agendamentos:', err)
+    });
+  }
 
   /* ── Helpers privados ── */
 

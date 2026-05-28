@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { BarbeiroService } from '../services/barbeiro.service';
 
 @Component({
   selector: 'app-home-page',
@@ -7,15 +8,40 @@ import { Component } from '@angular/core';
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
-export class HomePage {
+export class HomePage implements OnInit {
   currentIndex = 1;
-
+  selectedIndex = 0;
+  termoBusca = '';
 
   items = [
-    { url: 'image/DestaqueCentral.png' },
-    { url: 'image/DestaqueEsquerda.png' },
-    { url: 'image/DestaqueDireita.png' },
+    { url: 'assets/image/DestaqueCentral.png' },
+    { url: 'assets/image/DestaqueEsquerda.png' },
+    { url: 'assets/image/DestaqueDireita.png' },
   ];
+
+  specialists: any[] = [];
+
+  constructor(
+    private router: Router,
+    private barbeiroService: BarbeiroService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.barbeiroService.getBarbeiros().subscribe({
+      next: (barbeiros) => {
+        this.specialists = barbeiros.map(b => ({
+          id: b.id,
+          nome: b.nome.split(' ')[0],
+          nomeCompleto: b.nome,
+          url: b.foto_url,
+          descricao: b.bio || 'Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável.'
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar barbeiros na home:', err)
+    });
+  }
 
   getClass(index: number) {
     if (index === this.currentIndex) return 'active';
@@ -27,27 +53,32 @@ export class HomePage {
   next() {
     if (this.currentIndex < this.items.length - 1) {
       this.currentIndex++;
+    } else {
+      this.currentIndex = 0; // Torna o carousel cíclico (BUG-17)
     }
   }
 
   prev() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
+    } else {
+      this.currentIndex = this.items.length - 1; // Cíclico
     }
   }
 
-  especialistas = [
-    { url: 'image/Barbeiro1.png', nome: 'Ricardo', nomeCompleto: 'Ricardo Silva', fotoGrande:'image/Barbeiro1FotoGrande.png', descricao: "Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável." },
-    { url: 'image/Barbeiro2.png', nome: 'Marcus', nomeCompleto: 'Marcus Santos', descricao: "Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável."},
-    { url: 'image/Barbeiro3.png', nome: 'Felipe', nomeCompleto: 'Felipe Amancio', descricao: "Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável."},
-    { url: 'image/Barbeiro4.png', nome: 'André', nomeCompleto: 'André Oliveira', descricao: "Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável."},
-    { url: 'image/Barbeiro5.png', nome: 'Julio', nomeCompleto: 'Julio Pilla', descricao: "Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável."},
-    { url: 'image/Barbeiro6.png', nome: 'Sérgio', nomeCompleto: 'Sérgio Pereira', descricao: "Especialista em cortes clássicos e barboterapia. Unindo técnicas ancestrais ao visagismo moderno para um resultado impecável."}
-  ]
+  selecionar(index: number) {
+    this.selectedIndex = index;
+  }
 
-  selectedIndex = 0;
+  fazerAgendamento() {
+    if (this.specialists.length === 0) return;
+    const especialistaSelecionado = this.specialists[this.selectedIndex];
+    this.router.navigate(['/agendamento', especialistaSelecionado.id]);
+  }
 
-selecionar(index: number) {
-  this.selectedIndex = index;
-}
+  buscar() {
+    if (this.termoBusca.trim()) {
+      this.router.navigate(['/lista-servico'], { queryParams: { q: this.termoBusca } });
+    }
+  }
 }

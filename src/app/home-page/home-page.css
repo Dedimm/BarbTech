@@ -10,10 +10,12 @@ input{
     border-radius: 46px;
     background-color: rgba(97, 97, 97, 0.30);
     border: none;
+    color: white;
+    font-size: 16px;
 }
 
 input::placeholder{
-    color: #737373;
+    color: #bbb;
 }
 
 .destaque-container{

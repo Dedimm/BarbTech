@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BarbeiroService } from '../services/barbeiro.service';
 
@@ -14,15 +14,20 @@ export class ListaBarbeiro implements OnInit {
 
   constructor(
     private barbeiroService: BarbeiroService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.servicoFiltro = this.route.snapshot.paramMap.get('servico') || '';
-    const todos = this.barbeiroService.getBarbeiros();
-
-    this.barbeiros = this.servicoFiltro
-      ? todos.filter((b: any) => b.servicos?.includes(this.servicoFiltro))
-      : todos;
+    this.barbeiroService.getBarbeiros().subscribe({
+      next: (todos) => {
+        this.barbeiros = this.servicoFiltro
+          ? todos.filter((b: any) => b.servicos?.includes(this.servicoFiltro))
+          : todos;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Erro ao obter barbeiros:', err)
+    });
   }
 }

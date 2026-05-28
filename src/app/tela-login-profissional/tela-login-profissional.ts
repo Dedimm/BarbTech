@@ -18,8 +18,12 @@ export class TelaLoginProfissional {
   onSubmit() {
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
-        // Redireciona para um dashboard no futuro, por agora tela-inicial
-        this.router.navigate(['/tela-inicial']);
+        if (res && res.is_barbeiro === true) {
+          this.router.navigate(['/home-profissional']);
+        } else {
+          this.authService.logout();
+          this.errorMessage = 'Esta conta não é de profissional.';
+        }
       },
       error: (err) => {
         this.errorMessage = 'Credenciais inválidas';

@@ -31,28 +31,33 @@ export class CadastroCliente {
       return;
     }
 
-    // Adapt this to match the Django API expectations for "Cliente" creation.
-    // For now, doing a basic POST.
+    // Separar o nome completo em Primeiro Nome e Sobrenome
+    const partesDoNome = this.formData.nome.trim().split(' ');
+    const primeiroNome = partesDoNome[0] || '';
+    const sobrenome = partesDoNome.slice(1).join(' ') || 'Silva'; 
+
+    // Montando o pacote EXATAMENTE como o serializer do Django quer (plano)
     const payload = {
-      user: {
-        username: this.formData.email,
-        email: this.formData.email,
-        password: this.formData.senha,
-        first_name: this.formData.nome
-      },
-      cpf: this.formData.cpf,
+      username: this.formData.email,     
+      email: this.formData.email,
+      password: this.formData.senha,
+      first_name: primeiroNome,       
+      last_name: sobrenome,           
       telefone: this.formData.telefone,
-      condicoes_especiais: this.possuiCondicaoEspecial ? this.formData.condicao : null
+      cpf: this.formData.cpf,
+      is_barbeiro: false,
+      bio: this.possuiCondicaoEspecial ? `Condição especial: ${this.formData.condicao}` : ''
     };
 
-    this.http.post(`${environment.apiUrl}/register/cliente/`, payload).subscribe({
-      next: () => {
+    this.http.post(`${environment.apiUrl}/usuarios/`, payload).subscribe({
+      next: (response) => {
+        alert('Cliente cadastrado com sucesso!');
         this.router.navigate(['/login-usuario']);
       },
       error: (err) => {
+        console.error('Erro ao realizar o cadastro:', err);
         this.errorMessage = 'Erro ao realizar cadastro. Verifique os dados.';
       }
     });
   }
 }
-

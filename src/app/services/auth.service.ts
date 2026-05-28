@@ -20,6 +20,12 @@ export class AuthService {
           if (response.refresh) {
             localStorage.setItem('refresh_token', response.refresh);
           }
+          if (response.user_id) {
+            localStorage.setItem('user_id', response.user_id.toString());
+          }
+          if (response.is_barbeiro !== undefined) {
+            localStorage.setItem('is_barbeiro', response.is_barbeiro.toString());
+          }
         }
       })
     );
@@ -28,6 +34,8 @@ export class AuthService {
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('is_barbeiro');
   }
 
   getToken() {
@@ -36,5 +44,13 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  isBarbeiro(): boolean {
+    return localStorage.getItem('is_barbeiro') === 'true';
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem('user_id');
   }
 }

@@ -1,53 +1,103 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfissionalService {
+  private apiUrl = environment.apiUrl;
 
-  private readonly CHAVE_SERVICOS = 'profissional_servicos';
-  private readonly CHAVE_AGENDA = 'profissional_agenda';
+  constructor(private http: HttpClient) {}
 
   // ── SERVIÇOS ──
 
-  getServicos() {
-    const salvo = localStorage.getItem(this.CHAVE_SERVICOS);
-    return salvo ? JSON.parse(salvo) : [
-      { nome: 'Corte Social', valor: '45,00', tempo: 30 },
-      { nome: 'Barba Completa', valor: '35,00', tempo: 20 },
-      { nome: 'Corte + Barba', valor: '75,00', tempo: 50 },
-      { nome: 'Degradê / Fade', valor: '50,00', tempo: 40 }
-    ];
+  getServicos(barbeiroId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/servicos/?barbeiro=${barbeiroId}`).pipe(
+      map(servicos => servicos.map(s => ({
+        id: s.id,
+        nome: s.nome,
+        valor: s.preco,
+        tempo: s.duracao_minutos
+      })))
+    );
   }
 
-  salvarServicos(servicos: any[]) {
-    localStorage.setItem(this.CHAVE_SERVICOS, JSON.stringify(servicos));
+  adicionarServico(servico: any, barbeiroId: string): Observable<any> {
+    const payload = {
+      barbeiro: parseInt(barbeiroId, 10),
+      nome: servico.nome,
+      preco: servico.valor.replace(',', '.'),
+      duracao_minutos: servico.tempo
+    };
+    return this.http.post<any>(`${this.apiUrl}/servicos/`, payload);
+  }
+
+  deletarServico(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/servicos/${id}/`);
   }
 
   // ── AGENDA ──
 
-  getAgenda() {
-    const salvo = localStorage.getItem(this.CHAVE_AGENDA);
-    return salvo ? JSON.parse(salvo) : [
-      { nome: 'Segunda', inicio: '09:00', fim: '18:00', fechado: false },
-      { nome: 'Terça',   inicio: '09:00', fim: '18:00', fechado: false },
-      { nome: 'Quarta',  inicio: '09:00', fim: '18:00', fechado: false },
-      { nome: 'Quinta',  inicio: '09:00', fim: '18:00', fechado: false },
-      { nome: 'Sexta',   inicio: '09:00', fim: '18:00', fechado: false },
-      { nome: 'Sábado',  inicio: '09:00', fim: '18:00', fechado: true  },
-      { nome: 'Domingo', inicio: '09:00', fim: '18:00', fechado: true  },
-    ];
+  getAgenda(barbeiroId: string): Observable<any[]> {
+    const diasNomes = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+    
+    return this.http.get<any[]>(`${this.apiUrl}/horarios-trabalho/?barbeiro=${barbeiroId}`).pipe(
+      map(horarios => {
+        // Inicializa todos os dias fechados por padrão
+        const agendaResult = diasNomes.map((nome, index) => ({
+          nome,
+          dia_semana: index,
+          inicio: '09:00',
+          fim: '18:00',
+          fechado: true,
+          id: null as number | null
+        }));
+
+        // Atualiza os dias que têm registro no banco
+        horarios.forEach(h => {
+          const dia = agendaResult.find(d => d.dia_semana === h.dia_semana);
+          if (dia) {
+            dia.id = h.id;
+            dia.fechado = false;
+            dia.inicio = h.hora_inicio.substring(0, 5);
+            dia.fim = h.hora_fim.substring(0, 5);
+          }
+        });
+
+        return agendaResult;
+      })
+    );
   }
 
-  salvarAgenda(agenda: any[]) {
-    localStorage.setItem(this.CHAVE_AGENDA, JSON.stringify(agenda));
+  salvarDiaAgenda(dia: any, barbeiroId: string): Observable<any> {
+    const payload = {
+      barbeiro: parseInt(barbeiroId, 10),
+      dia_semana: dia.dia_semana,
+      hora_inicio: dia.inicio.length === 5 ? `${dia.inicio}:00` : dia.inicio,
+      hora_fim: dia.fim.length === 5 ? `${dia.fim}:00` : dia.fim
+    };
+
+    if (dia.fechado) {
+      if (dia.id) {
+        return this.http.delete(`${this.apiUrl}/horarios-trabalho/${dia.id}/`);
+      }
+      // Se já estava fechado e não tem ID, não faz nada
+      return new Observable(sub => { sub.next(null); sub.complete(); });
+    } else {
+      if (dia.id) {
+        return this.http.put(`${this.apiUrl}/horarios-trabalho/${dia.id}/`, payload);
+      } else {
+        return this.http.post(`${this.apiUrl}/horarios-trabalho/`, payload);
+      }
+    }
   }
 
-  // ── GERADOR DE SLOTS ──
+  // ── GERADOR DE SLOTS (local helper para agendamento) ──
 
-  gerarSlots(diaIndex: number, duracaoMinutos: number): string[] {
-    const agenda = this.getAgenda();
-    const dia = agenda[diaIndex];
+  gerarSlots(agenda: any[], diaIndex: number, duracaoMinutos: number): string[] {
+    const dia = agenda.find(d => d.dia_semana === diaIndex);
 
     if (!dia || dia.fechado) return [];
 

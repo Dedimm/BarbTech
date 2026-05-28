@@ -13,6 +13,8 @@ import { ListaBarbeiro } from './lista-barbeiro/lista-barbeiro';
 import { ListaServico } from './lista-servico/lista-servico';
 import { HomeProfissional } from './home-profissional/home-profissional';
 
+import { profissionalGuard, clienteGuard } from './guards/auth.guard';
+
 const routes: Routes = [
   {path: '', redirectTo: '/tela-inicial', pathMatch: 'full'},
   {path: 'tela-inicial', component: TelaInicial},
@@ -20,15 +22,15 @@ const routes: Routes = [
   {path: 'login-usuario', component: TelaLoginUsuario},
   {path: 'cadastro-profissional', component: CadastroProfissional},
   {path: 'cadastro-cliente', component: CadastroCliente},
-  {path: 'home-page', component: HomePage},
-  {path: 'configuracao-cliente', component: ConfiguracaoClienteComponent},
-  {path: 'configuracao-profissional', component: TelaProfissionalPainel},
-  {path: 'agendamento', component: TelaAgendamento},
-  {path: 'lista-barbeiro', component: ListaBarbeiro },
-  {path: 'lista-servico', component: ListaServico },
-  {path: 'home-profissional', component: HomeProfissional},
-  { path: 'agendamento/:id', component: TelaAgendamento },
-  { path: 'lista-barbeiro/:servico', component: ListaBarbeiro }
+  {path: 'home-page', component: HomePage, canActivate: [clienteGuard]},
+  {path: 'configuracao-cliente', component: ConfiguracaoClienteComponent, canActivate: [clienteGuard]},
+  {path: 'configuracao-profissional', component: TelaProfissionalPainel, canActivate: [profissionalGuard]},
+  {path: 'agendamento', component: TelaAgendamento, canActivate: [clienteGuard]},
+  {path: 'lista-barbeiro', component: ListaBarbeiro, canActivate: [clienteGuard] },
+  {path: 'lista-servico', component: ListaServico, canActivate: [clienteGuard] },
+  {path: 'home-profissional', component: HomeProfissional, canActivate: [profissionalGuard]},
+  { path: 'agendamento/:id', component: TelaAgendamento, canActivate: [clienteGuard] },
+  { path: 'lista-barbeiro/:servico', component: ListaBarbeiro, canActivate: [clienteGuard] }
 ];
 
 @NgModule({

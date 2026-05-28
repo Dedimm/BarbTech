@@ -5,8 +5,11 @@
 
   <div class="container">
     <div class="perfil">
-
-      <h1 class="titulo">CONFIGURAÇÕES DO PROFISSIONAL</h1>
+      
+      <div class="header-linha">
+        <button class="btn-voltar" (click)="voltar()">← Voltar</button>
+        <h1 class="titulo">CONFIGURAÇÕES DO PROFISSIONAL</h1>
+      </div>
       <span class="subtitulo">
         Gerencie suas informações e preferências de conta
       </span>
@@ -26,8 +29,8 @@
         </div>
 
         <div class="dados">
-          <h2>Arthur Morgan</h2>
-          <p>Master Barber & Stylist</p>
+          <h2>{{ nome }}</h2>
+          <p>{{ nomeBarbearia }}</p>
         </div>
       </div>
 
@@ -35,7 +38,7 @@
 
         <div class="card">
           <h3 class="icon-user">SOBRE MIM</h3>
-          <textarea placeholder="Conte um pouco sobre sua trajetória e especialidades..."></textarea>
+          <textarea [(ngModel)]="bio" placeholder="Conte um pouco sobre sua trajetória e especialidades..."></textarea>
         </div>
 
         <div class="grid">
@@ -118,6 +121,10 @@
               <span>+ Novo Serviço</span>
             </div>
           </div>
+        </div>
+
+        <div class="save-area">
+          <button class="save-btn" (click)="salvarPerfil()">SALVAR ALTERAÇÕES</button>
         </div>
 
       </div>
